@@ -3,6 +3,9 @@ from ..import db
 
 def add_user(name, email, password):
     try:
+        user = UserModel.query.filter_by(email=email).first()
+        if user:
+            return "email already exists"
         user = UserModel(name=name, email=email, password=password)
         db.session.add(user)
         db.session.commit()
@@ -12,7 +15,7 @@ def add_user(name, email, password):
 
 def user_login(email, password):
     try:
-        user = UserModel.query.filter_by(email=email)
+        user = UserModel.query.filter_by(email=email).first()
         if not user:
             return "no such user"
         elif user.password == password:
